@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: Sibling-Leftover Bug Pairs
+message: >-
+  If you use this dataset, please cite it and the upstream PRs listed in each
+  record's pr_url field.
+type: dataset
+authors:
+  - name: greymoth
+    alias: greymoth-jp
+repository-code: "https://github.com/greymoth-jp/sibling-leftover-dataset"
+abstract: >-
+  A hand-verified corpus of structural "sibling" bugs mined from real merged
+  GitHub pull requests. Each record pairs a fixed bug with its structural twin
+  and records whether that twin was left unfixed, framing a fix-propagation task
+  complementary to issue-to-patch benchmarks.
+keywords:
+  - code
+  - bug-detection
+  - program-repair
+  - sibling-bug
+  - fix-propagation
+license: CC-BY-4.0
+date-released: "2026-06-29"
