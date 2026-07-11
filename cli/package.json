@@ -1,0 +1,10 @@
+{
+  "name": "gh-sibling-cli",
+  "version": "0.1.0",
+  "description": "Find sibling-leftover bugs (a symmetric fix's missing half) in a repo's recent merged PRs.",
+  "type": "module",
+  "bin": { "gh-sibling": "gh-sibling.mjs" },
+  "scripts": { "test": "node gh-sibling.mjs --selftest" },
+  "license": "MIT",
+  "engines": { "node": ">=18" }
+}

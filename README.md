@@ -15,9 +15,9 @@ This tests whether a model can reason about bug propagation and structural
 symmetry, the way a human reviewer asks "if this was wrong here, where else is
 the same pattern wrong?"
 
-The companion tool [gh-sibling-cli](https://github.com/greymoth-jp/gh-sibling-cli)
-runs the same detection heuristic live against a repo's recent merged PRs; this
-dataset is the hand-verified record of what that kind of search finds.
+A companion CLI, [`cli/`](cli/), runs the same detection heuristic live against
+a repo's recent merged PRs; this dataset is the hand-verified record of what
+that kind of search finds. See [§CLI](#cli) below.
 
 ## Files
 
@@ -133,6 +133,52 @@ not as a measured time-to-fix.
 - **Sparse `gap_days`.** Only 3 records carry a measured gap.
 - **Snapshot.** Sibling locations and line numbers reflect repo state at mining
   time (June 2026) and drift as repos change.
+
+## CLI
+
+`cli/gh-sibling.mjs` is a small tool that runs the same detection heuristic
+this dataset was hand-mined with, live against a repo's recent merged PRs. It
+reads the last 25 merged PRs (via your already-authed `gh` CLI), scores each
+for how likely it left a mirror unfixed, and prints them highest-first with
+the reason.
+
+```sh
+node cli/gh-sibling.mjs <owner/repo>
+```
+
+```
+sibling-leftover candidates — nocodb/nocodb
+
+#14140 [3] fix(nc-gui): show date examples in date format dropdown
+  by rameshmane7218 · DateOptions.vue, DateTimeOptions.vue, lang/en.json
+  · bugfix verb: "fix"
+  · focused (3 code files)
+```
+
+That `en.json` with no other locale touched is the tell. Open the PR, find the
+side they missed, send the mirror.
+
+```sh
+node cli/gh-sibling.mjs <owner/repo> --json   # machine-readable, for scripting a queue
+node cli/gh-sibling.mjs --selftest            # offline check of the scoring, no gh needed
+```
+
+It scores on: symmetry language in the title (`also`, `same for`, `mirror`,
+`both`, `as well`), a bugfix verb (`fix`, `guard`, `escape`, `check`,
+`validate`), touching one side of a known opposite pair (`encode`/`decode`,
+`enable`/`disable`, `subscribe`/`unsubscribe`, `show`/`hide`, and more) but not
+the other, a bugfix that touched no test, a small focused PR (1 to 3 files),
+and being merged by `web-flow` (the maintainer took it verbatim, so the gap
+shipped as-is). None of it is proof — it's a ranked list of where to look
+first, so you read 5 PRs instead of 250.
+
+Requires Node (built-in modules only, zero dependencies) and
+[`gh`](https://cli.github.com/) installed and authed. Sends nothing anywhere
+beyond the `gh pr list` requests `gh` itself makes to GitHub.
+
+The CLI's code is MIT-licensed ([`cli/LICENSE`](cli/LICENSE)), separate from
+the CC-BY-4.0 dataset license below. This code previously lived in its own
+repo, `gh-sibling-cli`, now archived and folded in here.
 
 ## License
 
