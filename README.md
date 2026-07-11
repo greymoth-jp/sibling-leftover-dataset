@@ -15,6 +15,10 @@ This tests whether a model can reason about bug propagation and structural
 symmetry, the way a human reviewer asks "if this was wrong here, where else is
 the same pattern wrong?"
 
+The companion tool [gh-sibling-cli](https://github.com/greymoth-jp/gh-sibling-cli)
+runs the same detection heuristic live against a repo's recent merged PRs; this
+dataset is the hand-verified record of what that kind of search finds.
+
 ## Files
 
 This repository ships two related but distinct subsets:
